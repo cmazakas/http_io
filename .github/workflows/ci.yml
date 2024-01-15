@@ -778,7 +778,9 @@ jobs:
           triplet=${{ matrix.x86 && 'x86-windows' || 'x64-windows' }}
           addrmdl=${{ matrix.x86 && '32' || '64' }}
 
-          echo "using zlib : : <include>\"${home}/vcpkg-root/installed/${triplet}/include\" <search>\"${home}/vcpkg-root/installed/${triplet}/lib\" : <address-model>${addrmdl} ;" | sed 's/\/d\//D:\//g' > user-config.jam
+          touch user-config.jam
+          echo "using zlib : : <include>\"${home}/vcpkg-root/installed/${triplet}/include\" <search>\"${home}/vcpkg-root/installed/${triplet}/lib\" : <address-model>${addrmdl} ;" | sed 's/\/d\//D:\//g' >> user-config.jam
+          echo "using openssl : : <include>\"${home}/vcpkg-root/installed/${triplet}/include\" <search>\"${home}/vcpkg-root/installed/${triplet}/lib\" : <address-model>${addrmdl} ;" | sed 's/\/d\//D:\//g' >> user-config.jam
           cat user-config.jam
 
           toolchain=$(echo ${{ steps.zlib-install.outputs.vcpkg-toolchain }} | sed 's/\/d\//D:\//g' )
