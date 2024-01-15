@@ -216,7 +216,7 @@ jobs:
             name: "GCC 13: C++17-20 (x86)"
             x86: true
             build-type: "Release"
-            install: "gcc-13-multilib g++-13-multilib zlib1g-dev zlib1g-dev:i386"
+            install: "gcc-13-multilib g++-13-multilib zlib1g-dev zlib1g-dev:i386 libssl-dev:i386"
 
           - compiler: "gcc"
             version: "13"
@@ -265,7 +265,7 @@ jobs:
             shared: true
             x86: true
             build-type: "Release"
-            install: "gcc-13-multilib g++-13-multilib zlib1g-dev zlib1g-dev:i386"
+            install: "gcc-13-multilib g++-13-multilib zlib1g-dev zlib1g-dev:i386 libssl-dev:i386"
             build-cmake: true
 
           - compiler: "gcc"
@@ -297,7 +297,7 @@ jobs:
             asan: true
             x86: true
             build-type: "RelWithDebInfo"
-            install: "gcc-13-multilib g++-13-multilib zlib1g-dev zlib1g-dev:i386"
+            install: "gcc-13-multilib g++-13-multilib zlib1g-dev zlib1g-dev:i386 libssl-dev:i386"
 
           - compiler: "gcc"
             version: "13"
@@ -328,7 +328,7 @@ jobs:
             ubsan: true
             x86: true
             build-type: "RelWithDebInfo"
-            install: "gcc-13-multilib g++-13-multilib zlib1g-dev zlib1g-dev:i386"
+            install: "gcc-13-multilib g++-13-multilib zlib1g-dev zlib1g-dev:i386 libssl-dev:i386"
 
           - compiler: "gcc"
             version: "12"
@@ -455,7 +455,7 @@ jobs:
             name: "Clang 17: C++17-20 (x86)"
             x86: true
             build-type: "Release"
-            install: "gcc-multilib g++-multilib zlib1g-dev zlib1g-dev:i386"
+            install: "gcc-multilib g++-multilib zlib1g-dev zlib1g-dev:i386 libssl-dev:i386"
 
           - compiler: "clang"
             version: "17"
@@ -503,7 +503,7 @@ jobs:
             asan: true
             x86: true
             build-type: "RelWithDebInfo"
-            install: "gcc-multilib g++-multilib zlib1g-dev zlib1g-dev:i386"
+            install: "gcc-multilib g++-multilib zlib1g-dev zlib1g-dev:i386 libssl-dev:i386"
 
           - compiler: "clang"
             version: "17"
@@ -534,7 +534,7 @@ jobs:
             ubsan: true
             x86: true
             build-type: "RelWithDebInfo"
-            install: "gcc-multilib g++-multilib zlib1g-dev zlib1g-dev:i386"
+            install: "gcc-multilib g++-multilib zlib1g-dev zlib1g-dev:i386 libssl-dev:i386"
 
           - compiler: "clang"
             version: "16"
@@ -746,6 +746,7 @@ jobs:
           apt-get-add-architecture: 'i386'
           apt-get: >-
             ${{ matrix.install }}
+            libssl-dev
             build-essential
 
       - name: Clone Boost
@@ -762,7 +763,7 @@ jobs:
         if: ${{ startsWith(matrix.runs-on, 'windows') && !startsWith(matrix.compiler, 'mingw') }}
         id: zlib-install
         with:
-          vcpkg: zlib
+          vcpkg: "zlib,openssl"
           vcpkg-dir: vcpkg-root
           vcpkg-triplet: ${{ matrix.x86 && 'x86-windows' || 'x64-windows' }}
 
