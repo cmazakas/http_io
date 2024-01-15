@@ -200,7 +200,7 @@ jobs:
             is-latest: true
             name: "GCC 13: C++17-20"
             build-type: "Release"
-            install: "zlib1g-dev"
+            install: "cmake zlib1g-dev"
             build-cmake: true
 
           - compiler: "gcc"
@@ -216,7 +216,7 @@ jobs:
             name: "GCC 13: C++17-20 (x86)"
             x86: true
             build-type: "Release"
-            install: "gcc-13-multilib g++-13-multilib zlib1g-dev zlib1g-dev:i386 libssl-dev:i386"
+            install: "cmake gcc-13-multilib g++-13-multilib zlib1g-dev zlib1g-dev:i386 libssl-dev:i386"
 
           - compiler: "gcc"
             version: "13"
@@ -233,7 +233,7 @@ jobs:
             build-type: "Debug"
             cxxflags: "--coverage -fprofile-arcs -ftest-coverage"
             ccflags: "--coverage -fprofile-arcs -ftest-coverage"
-            install: "lcov zlib1g-dev wget unzip"
+            install: "cmake lcov zlib1g-dev wget unzip"
 
           - compiler: "gcc"
             version: "13"
@@ -248,7 +248,7 @@ jobs:
             name: "GCC 13: C++17-20 (shared)"
             shared: true
             build-type: "Release"
-            install: "zlib1g-dev"
+            install: "cmake zlib1g-dev"
             build-cmake: true
 
           - compiler: "gcc"
@@ -265,7 +265,7 @@ jobs:
             shared: true
             x86: true
             build-type: "Release"
-            install: "gcc-13-multilib g++-13-multilib zlib1g-dev zlib1g-dev:i386 libssl-dev:i386"
+            install: "cmake gcc-13-multilib g++-13-multilib zlib1g-dev zlib1g-dev:i386 libssl-dev:i386"
             build-cmake: true
 
           - compiler: "gcc"
@@ -281,7 +281,7 @@ jobs:
             name: "GCC 13: C++17-20 (asan)"
             asan: true
             build-type: "RelWithDebInfo"
-            install: "zlib1g-dev"
+            install: "cmake zlib1g-dev"
 
           - compiler: "gcc"
             version: "13"
@@ -297,7 +297,7 @@ jobs:
             asan: true
             x86: true
             build-type: "RelWithDebInfo"
-            install: "gcc-13-multilib g++-13-multilib zlib1g-dev zlib1g-dev:i386 libssl-dev:i386"
+            install: "cmake gcc-13-multilib g++-13-multilib zlib1g-dev zlib1g-dev:i386 libssl-dev:i386"
 
           - compiler: "gcc"
             version: "13"
@@ -312,7 +312,7 @@ jobs:
             name: "GCC 13: C++17-20 (ubsan)"
             ubsan: true
             build-type: "RelWithDebInfo"
-            install: "zlib1g-dev"
+            install: "cmake zlib1g-dev"
 
           - compiler: "gcc"
             version: "13"
@@ -328,7 +328,7 @@ jobs:
             ubsan: true
             x86: true
             build-type: "RelWithDebInfo"
-            install: "gcc-13-multilib g++-13-multilib zlib1g-dev zlib1g-dev:i386 libssl-dev:i386"
+            install: "cmake gcc-13-multilib g++-13-multilib zlib1g-dev zlib1g-dev:i386 libssl-dev:i386"
 
           - compiler: "gcc"
             version: "12"
@@ -439,7 +439,7 @@ jobs:
             is-latest: true
             name: "Clang 17: C++17-20"
             build-type: "Release"
-            install: "zlib1g-dev"
+            install: "zlib1g-dev cmake"
             build-cmake: true
 
           - compiler: "clang"
@@ -455,7 +455,7 @@ jobs:
             name: "Clang 17: C++17-20 (x86)"
             x86: true
             build-type: "Release"
-            install: "gcc-multilib g++-multilib zlib1g-dev zlib1g-dev:i386 libssl-dev:i386"
+            install: "cmake gcc-multilib g++-multilib zlib1g-dev zlib1g-dev:i386 libssl-dev:i386"
 
           - compiler: "clang"
             version: "17"
@@ -472,7 +472,7 @@ jobs:
             build-type: "Release"
             cxxflags: "-ftime-trace"
             ccflags: "-ftime-trace"
-            install: "zlib1g-dev wget unzip"
+            install: "cmake zlib1g-dev wget unzip"
 
           - compiler: "clang"
             version: "17"
@@ -487,7 +487,7 @@ jobs:
             name: "Clang 17: C++17-20 (asan)"
             asan: true
             build-type: "RelWithDebInfo"
-            install: "zlib1g-dev"
+            install: "cmake zlib1g-dev"
 
           - compiler: "clang"
             version: "17"
@@ -503,7 +503,7 @@ jobs:
             asan: true
             x86: true
             build-type: "RelWithDebInfo"
-            install: "gcc-multilib g++-multilib zlib1g-dev zlib1g-dev:i386 libssl-dev:i386"
+            install: "cmake gcc-multilib g++-multilib zlib1g-dev zlib1g-dev:i386 libssl-dev:i386"
 
           - compiler: "clang"
             version: "17"
@@ -518,7 +518,7 @@ jobs:
             name: "Clang 17: C++17-20 (ubsan)"
             ubsan: true
             build-type: "RelWithDebInfo"
-            install: "zlib1g-dev"
+            install: "cmake zlib1g-dev"
 
           - compiler: "clang"
             version: "17"
@@ -534,7 +534,7 @@ jobs:
             ubsan: true
             x86: true
             build-type: "RelWithDebInfo"
-            install: "gcc-multilib g++-multilib zlib1g-dev zlib1g-dev:i386 libssl-dev:i386"
+            install: "cmake gcc-multilib g++-multilib zlib1g-dev zlib1g-dev:i386 libssl-dev:i386"
 
           - compiler: "clang"
             version: "16"
@@ -544,6 +544,7 @@ jobs:
             cc: "clang-16"
             runs-on: "ubuntu-latest"
             container: "ubuntu:23.04"
+            install: "cmake"
             b2-toolset: "clang"
             name: "Clang 16: C++17-20"
             build-type: "Release"
