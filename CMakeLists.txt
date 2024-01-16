@@ -65,7 +65,7 @@ function(boost_http_io_setup_properties target)
     )
 
     if(MINGW)
-      target_link_libraries(${target} PUBLIC ws2_32)
+      target_link_libraries(${target} PUBLIC ws2_32 wsock32)
     endif()
 endfunction()
 
