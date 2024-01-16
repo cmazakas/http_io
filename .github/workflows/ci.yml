@@ -799,10 +799,8 @@ jobs:
           home=$(pwd)
 
           touch user-config.jam
-          echo "using openssl : : <ssl-name>libssl <crypto-name>libcrypto : ;" | sed 's/\/d\//D:\//g' >> user-config.jam
+          echo "using openssl : : <include>\"C:/Program Files/OpenSSL/include\" <search>\"C:/Program Files/OpenSSL/lib\" <ssl-name>libssl <crypto-name>libcrypto : ;" | sed 's/\/d\//D:\//g' >> user-config.jam
           cat user-config.jam
-          toolchain=$(echo "$GITHUB_WORKSPACE/vcpkg-root/scripts/buildsystems/vcpkg.cmake" | sed 's/\/d\//D:\//g' )
-          echo "toolchain=${toolchain}" >> $GITHUB_OUTPUT
 
       - name: Patch Boost
         id: patch
