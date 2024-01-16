@@ -780,6 +780,8 @@ jobs:
           addrmdl=${{ matrix.x86 && '32' || '64' }}
 
           ls -lah "${home}/vcpkg-root/installed/${triplet}/include"
+          ls -lah "${home}/vcpkg-root/installed/${triplet}/include/openssl"
+          ls -lah "${home}/vcpkg-root/installed/${triplet}/lib"
 
           touch user-config.jam
           echo "using zlib : : <include>\"${home}/vcpkg-root/installed/${triplet}/include\" <search>\"${home}/vcpkg-root/installed/${triplet}/lib\" : <address-model>${addrmdl} ;" | sed 's/\/d\//D:\//g' >> user-config.jam
@@ -787,7 +789,6 @@ jobs:
           cat user-config.jam
 
           toolchain=$(echo "$GITHUB_WORKSPACE/vcpkg-root/scripts/buildsystems/vcpkg.cmake" | sed 's/\/d\//D:\//g' )
-          cat ${toolchain}
           echo "toolchain=${toolchain}" >> $GITHUB_OUTPUT
 
       - name: Patch Boost
