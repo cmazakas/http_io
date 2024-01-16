@@ -71,7 +71,6 @@ jobs:
             name: "MSVC 14.34: C++17-20"
             build-type: "Release"
             build-cmake: true
-            toolchain: "$GITHUB_WORKSPACE/vcpkg-root/scripts/buildsystems/vcpkg.cmake"
 
           - compiler: "msvc"
             version: "14.34"
@@ -84,7 +83,6 @@ jobs:
             name: "MSVC 14.34: C++17-20 (x86)"
             x86: true
             build-type: "Release"
-            toolchain: "$GITHUB_WORKSPACE/vcpkg-root/scripts/buildsystems/vcpkg.cmake"
 
           - compiler: "msvc"
             version: "14.34"
@@ -98,7 +96,6 @@ jobs:
             shared: true
             build-type: "Release"
             build-cmake: true
-            toolchain: "$GITHUB_WORKSPACE/vcpkg-root/scripts/buildsystems/vcpkg.cmake"
 
           - compiler: "msvc"
             version: "14.29"
@@ -110,7 +107,6 @@ jobs:
             is-earliest: true
             name: "MSVC 14.29: C++14-17"
             build-type: "Release"
-            toolchain: "$GITHUB_WORKSPACE/vcpkg-root/scripts/buildsystems/vcpkg.cmake"
 
           - compiler: "clang-cl"
             version: "*"
@@ -124,7 +120,6 @@ jobs:
             name: "Windows-Clang"
             build-type: "Release"
             build-cmake: true
-            toolchain: "$GITHUB_WORKSPACE/vcpkg-root/scripts/buildsystems/vcpkg.cmake"
 
           - compiler: "mingw"
             version: "*"
@@ -789,6 +784,10 @@ jobs:
           echo "using openssl : : <include>\"${home}/vcpkg-root/installed/${triplet}/include\" <search>\"${home}/vcpkg-root/installed/${triplet}/lib\" : <address-model>${addrmdl} ;" | sed 's/\/d\//D:\//g' >> user-config.jam
           cat user-config.jam
 
+          toolchain=$(echo "$GITHUB_WORKSPACE/vcpkg-root/scripts/buildsystems/vcpkg.cmake" | sed 's/\/d\//D:\//g' )
+          cat ${toolchain}
+          echo "toolchain=${toolchain}" >> $GITHUB_OUTPUT
+
       - name: Patch Boost
         id: patch
         shell: bash
@@ -826,24 +825,24 @@ jobs:
           python3 tools/boostdep/depinst/depinst.py buffers
           python3 tools/boostdep/depinst/depinst.py http_proto
 
-      - name: Boost B2 Workflow
-        uses: alandefreitas/cpp-actions/b2-workflow@v1.7.0
-        if: ${{ !matrix.coverage && !matrix.time-trace }}
-        with:
-          source-dir: boost-root
-          modules: http_io
-          toolset: ${{ matrix.b2-toolset }}
-          build-variant: ${{ matrix.build-type }}
-          cxx: ${{ steps.setup-cpp.outputs.cxx || matrix.cxx || '' }}
-          cxxstd: ${{ matrix.cxxstd }}
-          address-model: ${{ (matrix.x86 && '32') || '64' }}
-          asan: ${{ matrix.asan }}
-          ubsan: ${{ matrix.ubsan }}
-          shared: ${{ matrix.shared }}
-          rtti: ${{ (matrix.is-latest && 'on,off') || 'on' }}
-          cxxflags: ${{ (matrix.asan && '-fsanitize=pointer-subtract') || '' }}
-          user-config: ${{ (startsWith(matrix.runs-on, 'windows') && !startsWith(matrix.compiler, 'mingw') && format('{0}/user-config.jam', steps.patch.outputs.workspace_root)) || '' }}
-          stop-on-error: true
+      # - name: Boost B2 Workflow
+      #   uses: alandefreitas/cpp-actions/b2-workflow@v1.7.0
+      #   if: ${{ !matrix.coverage && !matrix.time-trace }}
+      #   with:
+      #     source-dir: boost-root
+      #     modules: http_io
+      #     toolset: ${{ matrix.b2-toolset }}
+      #     build-variant: ${{ matrix.build-type }}
+      #     cxx: ${{ steps.setup-cpp.outputs.cxx || matrix.cxx || '' }}
+      #     cxxstd: ${{ matrix.cxxstd }}
+      #     address-model: ${{ (matrix.x86 && '32') || '64' }}
+      #     asan: ${{ matrix.asan }}
+      #     ubsan: ${{ matrix.ubsan }}
+      #     shared: ${{ matrix.shared }}
+      #     rtti: ${{ (matrix.is-latest && 'on,off') || 'on' }}
+      #     cxxflags: ${{ (matrix.asan && '-fsanitize=pointer-subtract') || '' }}
+      #     user-config: ${{ (startsWith(matrix.runs-on, 'windows') && !startsWith(matrix.compiler, 'mingw') && format('{0}/user-config.jam', steps.patch.outputs.workspace_root)) || '' }}
+      #     stop-on-error: true
 
       - name: Boost CMake Workflow
         uses: alandefreitas/cpp-actions/cmake-workflow@v1.7.0
@@ -871,7 +870,7 @@ jobs:
           package: false
           package-artifact: false
           ref-source-dir: boost-root/libs/http_io
-          toolchain: ${{ matrix.toolchain || '' }}
+          toolchain: ${{ (startsWith(matrix.runs-on, 'windows') && !startsWith(matrix.compiler, 'mingw') && steps.patch-user-config.outputs.toolchain) || '' }}
 
       - name: Set Path
         if: startsWith(matrix.runs-on, 'windows') && matrix.shared
@@ -904,7 +903,7 @@ jobs:
             -D CMAKE_PREFIX_PATH=${{ steps.patch.outputs.workspace_root }}/.local
           ref-source-dir: boost-root/libs/http_io
           trace-commands: true
-          toolchain: ${{ matrix.toolchain || '' }}
+          toolchain: ${{ (startsWith(matrix.runs-on, 'windows') && !startsWith(matrix.compiler, 'mingw') && steps.patch-user-config.outputs.toolchain) || '' }}
 
       - name: Subdirectory Integration Workflow
         uses: alandefreitas/cpp-actions/cmake-workflow@v1.7.0
@@ -925,7 +924,7 @@ jobs:
           cmake-version: '>=3.15'
           extra-args: -D BOOST_CI_INSTALL_TEST=OFF
           ref-source-dir: boost-root/libs/http_io/test/cmake_test
-          toolchain: ${{ matrix.toolchain || '' }}
+          toolchain: ${{ (startsWith(matrix.runs-on, 'windows') && !startsWith(matrix.compiler, 'mingw') && steps.patch-user-config.outputs.toolchain) || '' }}
 
       - name: Root Project CMake Workflow
         uses: alandefreitas/cpp-actions/cmake-workflow@v1.7.0
@@ -949,7 +948,7 @@ jobs:
           package: false
           package-artifact: false
           ref-source-dir: boost-root
-          toolchain: ${{ matrix.toolchain || '' }}
+          toolchain: ${{ (startsWith(matrix.runs-on, 'windows') && !startsWith(matrix.compiler, 'mingw') && steps.patch-user-config.outputs.toolchain) || '' }}
 
       - name: FlameGraph
         uses: alandefreitas/cpp-actions/flamegraph@v1.7.0
